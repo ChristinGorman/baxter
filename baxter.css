@@ -1,0 +1,102 @@
+html * {
+   font-family: 'Anaheim' !important;
+   color:#cba;
+   background-color:#202;
+}
+
+.visible {
+  display:visible;
+  opacity:100;
+}
+
+.invisible {
+  clear:both;
+  display:none;
+  opacity:0;
+}
+
+
+.childBlock{
+  float:left;
+  clear:right; 
+  width:150px;
+  height:150px;
+  padding:5px 5px 40px 5px;
+}
+
+#errorMessage {
+  align:block;
+  color:#ff0000;
+}
+
+.helperImg {
+  width:16px; 
+  height:16px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  display:block;
+  clear:both;
+}
+
+#menu {
+  width:100%;
+  padding: 5px 10px 5px 0px;
+}
+
+.button {
+  text-decoration: none;
+  background-color: #ffcc77;
+  color: #333;
+  padding: 2px 6px 2px 6px;
+}
+
+.button:hover {
+  border: 1px solid #aa00aa;
+}
+
+.largeText {
+  font-size:x-large;
+  font-weight:bold;
+}
+
+.headerText{
+  font-size:large;
+  font-weight:bold;
+}
+
+.header {
+  position:relative;
+  display:block;
+  border-bottom:5px solid #ff8800;
+  padding:0 0 0 0;
+  margin-top:0;
+  height:30px;
+  width:100%;
+  background-color:#303;
+}
+
+img {
+  max-width: 100%;
+}
+
+.thumb {
+  height: 75px;
+  border: 1px solid #000;
+  margin: 10px 5px 0 0;
+}
+
+.post-it {
+  padding:25px;
+  color: #fff;
+  width:90%;
+  background-color:#303;
+
+  box-shadow: 1px 4px 6px #333;
+  -moz-box-shadow: 1px 4px 6px #333;
+  -webkit-box-shadow: 1px 4px 6px #333;
+}

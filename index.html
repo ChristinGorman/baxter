@@ -1,0 +1,27 @@
+<!doctype html>
+<meta charset="UTF-8">
+<html>
+<head>
+    <link rel="shortcut icon" href="/images/cat.ico" type="image/x-icon"/>
+    <script src="javascript/utils.js"></script>
+    <script src="javascript/login.js"></script>
+    <link rel="stylesheet" type="text/css" href="baxter.css">
+    <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
+    <title>B A X T E R</title>
+
+</head>
+<body>
+<div style="margin: 300px auto;width:200px;align:center">
+    <div style="padding:10px;" class="header largeText">LOG IN</div>
+    <form action="login" method="POST">
+        <input type="text" size="40" id="email" name="email" placeholder="email address"/>
+        <input type="password" name="password" placeholder="password"/>
+        <input type="submit" value="Log in" class="button"/>
+    </form>
+    <div id="menu" style="padding-top:20px"><a href="newGrownup.html" class="button">New user</a></div>
+</div>
+<script>
+    Utils.id('email').focus();
+</script>
+</body>
+</html>

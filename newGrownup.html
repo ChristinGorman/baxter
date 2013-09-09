@@ -1,0 +1,66 @@
+<!doctype html>
+<meta charset="UTF-8">
+<html>
+<head>
+  <link rel="shortcut icon" href="/images/cat.ico" type="image/x-icon" />
+    <script src="javascript/utils.js"></script>
+    <script src="javascript/data.js"></script>
+    <script src="javascript/grownup.js"></script>
+    <link rel="stylesheet" type="text/css" href="baxter.css">
+    <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
+  <title>B A X T E R</title>
+</head>
+<body>
+  <div style="margin: auto auto;">
+      <div class="header largeText">NEW GROWNUP</div>
+    <form action="grownup" method="POST">
+      <ul>
+      <li>
+        <input type="hidden" name="action" value="insert" />
+      </li>
+      <li>
+        <input style="width:150px" type="text" id="email" name="email" placeholder="email address" onBlur="if (!GrownUp.validateEmail())this.focus();else Utils.id('password').focus();" />
+        <img src="/images/check.png" id="emailCheckImg" class="invisible" />
+        <img src="/images/error.png" id="emailErrorImg" class="invisible" />
+        <input type="text" id="emailError" value="" class="invisible" />
+      </li>
+      <li>
+        <input style="width:150px" type="password" id="password" name="password" placeholder="password" />
+      </li>
+      <li>
+        <input style="width:150px" type="password" id="repeatPassword" placeholder="repeat password" onBlur="if (GrownUp.validatePasswords()) GrownUp.edit('daycare');"/>
+        <img src="/images/check.png" id="passwordCheckImg" class="invisible" />
+        <img src="/images/error.png" id="passwordErrorImg" class="invisible"  />
+        <input type="text" id="passwordError" value="" class="invisible" />
+      </li>
+      <li>
+        <input type="text" name="grownup_first_name" id="grownup_first_name" placeholder="First name"/>
+        <input type="text" name="grownup_middle_name" id="grownup_middle_name" placeholder="Middle name"/>
+        <input type="text" name="grownup_last_name" id="grownup_last_name" placeholder="Last name"/>
+      </li>
+      <li>
+        <input style="width:150px;float:left;clear:right" class="visible" type="text" id="grownup_daycare_idDisplay" placeholder="Choose day care center" onFocus="Utils.edit('grownup_daycare_id');" />
+        <select style="width:150px;float:left;clear:right" class="invisible" name="grownup_daycare_id" id="grownup_daycare_id"
+                onBlur="Utils.doneEditing('grownup_daycare_id'); Data.getChildren(this.value, GrownUp.addChildrenToSelect); Data.getGroups(this.value, GrownUp.addGroupsToSelect); GrownUp.edit('groups')"></select>
+        <img src="/images/check.png" id="daycareCenterCheckImg" class="invisible" />
+      </li>
+      <li>
+        <input style="width:150px;float:left;clear:right" class="visible" type="text" id="groupsDisplay" placeholder="Choose groups" onFocus="Utils.edit('groups');" />
+        <select style="width:150px;float:left;clear:right" class="invisible" name="groups" id="groups" multiple onBlur="Utils.doneEditing('groups');" ></select>
+      </li>
+      <li>
+        <input style="width:150px;float:left;clear:right" class="visible" type="text" id="childrenDisplay" placeholder="Choose children" onFocus="Utils.edit('children');" />
+        <select style="width:150px;float:left;clear:right" class="invisible" name="children" id="children" multiple onBlur="Utils.doneEditing('children');Utils.id('submit').focus();" ></select>
+        <img src="/images/check.png" id="childrenCheckImg" class="invisible helperImg" />
+      </li>
+      <li>
+        <input type="submit" value="Create user and log in" id="submit" disabled="true" />
+      </li>
+      </ul>
+    </form>
+  </div>
+  <script>
+    Data.getDaycareCenters(GrownUp.addDaycareCentersToSelect);
+  </script>
+</body>
+</html>

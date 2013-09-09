@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Opacity test</title>
+
+    <link rel="stylesheet" href="qunit.css" />
+    <script src="qunit-1.12.0.js"></script>
+    <script src="ScheduleFunctions.js"></script>
+
+    <script>
+        test("opacity", function() {
+        var n = new Date().getTime();
+        var diaperChange = {};
+        diaperChange.schedule_name = 'diaper change';
+        diaperChange.last_event = n - (5 * MINUTES);
+        diaperChange.interval = 10;
+
+        var child = {};
+        child.child_id = 1;
+        child.schedules = [];
+        child.schedules.push(diaperChange);
+
+        ok(Math.abs(ScheduleFunctions.setOpacityFor(child, 'diaper change') - 0.5) < 0.1);
+        equal(ScheduleFunctions.setOpacityFor(child, 'outdoor spotting'), 0);
+
+        diaperChange.last_event = n - (11 * MINUTES);
+        equal(ScheduleFunctions.setOpacityFor(child, 'diaper change'), 1);
+
+        diaperChange.last_event = n - (1 * MINUTES);
+        ok(Math.abs(ScheduleFunctions.setOpacityFor(child, 'diaper change') - 0.1) < 0.1);
+
+        diaperChange.last_event = n - (9 * MINUTES);
+        ok(Math.abs(ScheduleFunctions.setOpacityFor(child, 'diaper change') - 0.9) < 0.1);
+        });
+    </script>
+</head>
+<body>
+<div id="qunit"></div>
+</body>
+</html>

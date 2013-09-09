@@ -1,0 +1,55 @@
+<!doctype html>
+<meta charset="UTF-8">
+<html>
+<head>
+    <link rel="shortcut icon" href="/images/cat.ico" type="image/x-icon"/>
+    <script src="javascript/utils.js"></script>
+    <script src="javascript/child.js"></script>
+    <script src="javascript/data.js"></script>
+    <link rel="stylesheet" type="text/css" href="baxter.css">
+    <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
+    <title>B A X T E R</title>
+</head>
+<body>
+<div style="margin: auto auto;">
+    <div class="header largeText">NEW CHILD</div>
+
+    <form action="child" method="POST">
+        <ul>
+            <li>
+                <input type="hidden" name="action" value="insert"/>
+            </li>
+            <li>
+                <input style="width:150px;float:left;clear:right" class="visible" type="text" id="daycareDisplay"
+                       placeholder="Choose day care center" onFocus="Utils.edit('daycare');"/>
+                <select style="width:150px;float:left;clear:right" class="invisible" name="child_daycare_id"
+                        id="daycare" onBlur="Utils.doneEditing('daycare');"></select>
+            </li>
+            <li>
+                <input style="width:150px" type="text" id="child_first_name" name="child_first_name" placeholder="First name"
+                       onBlur="Utils.id('child_middle_name').focus();"/>
+            </li>
+            <li>
+                <input style="width:150px" type="text" id="child_middle_name" name="child_middle_name" placeholder="Middle name"
+                       onBlur="Utils.id('child_last_name').focus();"/>
+            </li>
+            <li>
+                <input style="width:150px" type="text" id="child_last_name" name="child_last_name" placeholder="Last name"/>
+            </li>
+            <li>
+                <input style="width:150px" type="text" id="nickname" name="nickname" placeholder="Nickname"/>
+            </li>
+            <li>
+                <input style="width:150px" type="color" id="color" name="color" placeholder="Color"/>
+            </li>
+            <li>
+                <input type="submit" value="Save Changes" id="submit"/>
+            </li>
+        </ul>
+    </form>
+</div>
+<script>
+    Data.getDaycareCenters(Child.addDaycareCentersToSelect);
+</script>
+</body>
+</html>

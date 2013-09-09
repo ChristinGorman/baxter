@@ -1,0 +1,111 @@
+<!doctype html>
+<meta charset="UTF-8">
+<html ng-app>
+<head>
+    <link rel="shortcut icon" href="/images/cat.ico" type="image/x-icon"/>
+    <title>B A X T E R</title>
+
+    <script src="javascript/angular-1.1.5/angular.min.js"></script>
+    <script src="javascript/utils.js"></script>
+    <script src="javascript/data.js"></script>
+    <script src="javascript/baxter.js"></script>
+    <script src="javascript/ScheduleFunctions.js"></script>
+    <link rel="stylesheet" type="text/css" href="baxter.css">
+    <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
+
+</head>
+<body ng-controller="Baxter">
+<div class="header largeText">B A X T E R</div>
+<div id="menu">
+    Logged in as: {{loggedIn}}
+    <a class="button" href="editGrownup.html?grownup_id={{grownup_id}}">Edit my info</a>
+</div>
+
+<table style="width:100%">
+    <span id="errorMessage"></span>
+    <tr valign="top">
+        <td style="width:50%">
+            <input type="radio" name="schedule_name" ng-click="chooseSchedule(null);" id="showAll"/>
+            <label for="showAll">Show all</label>
+
+            <div style="clear:right" ng-repeat="scheduleName in scheduleNames">
+                <input type="radio" name="schedule_name" ng-click="chooseSchedule(scheduleName);"
+                       id="{{scheduleName}}"/>
+                <label for="{{scheduleName}}">{{scheduleName}}</label>
+            </div>
+            <input type="text" ng-model="search" class="search-query" placeholder="Search"/>
+
+            <div id="allOfThem">
+                <div ng-repeat="child in children | filter:search" id="child{{child.child_id}}"
+                     class="visible childBlock"
+                     ng-dblclick="spotted(child)" ng-click="choose(child)">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                        <circle id="tummy{{child.child_id}}" cx="75" cy="75" r="38" stroke="black" stroke-width="1"
+                                fill="{{child.color}}"></circle>
+                        <text x="50" y="20" fill="#cba">{{child.nickname}}</text>
+
+                        <path id="mouth" d="M 55 85 Q 75 105 95 85" stroke="black" stroke-width="2" fill="none"/>
+
+                        <ellipse id="leftEye" cx="65" cy="60" rx="2" ry="3" fill="black" stroke="none">
+                            <animate dur="1s" begin="tummy{{child.child_id}}.mouseover"
+                                     end="tummy{{child.child_id}}.mouseout"
+                                     repeatCount="indefinite" dur="20s" attributeName="ry"
+                                     values="3; 3; 3; 3; 3; 3; 3; 3; 2; 1; 2"/>
+                        </ellipse>
+                        <ellipse id="rightEye" cx="85" cy="60" rx="2" ry="3" fill="black" stroke="none">
+                            <animate dur="1s" begin="tummy{{child.child_id}}.mouseover"
+                                     end="tummy{{child.child_id}}.mouseout"
+                                     repeatCount="indefinite" dur="20s" attributeName="ry"
+                                     values="3; 3; 3; 3; 3; 3; 3; 3; 2; 1; 2"/>
+                        </ellipse>
+
+                        <line x1="15" y1="90" x2="39" y2="80" stroke="#cba" stroke-width="2" id="rightArm{{child.id}}">
+                            <animate dur="1s" begin="tummy{{child.child_id}}.mouseover"
+                                     end="tummy{{child.child_id}}.mouseout"
+                                     repeatCount="indefinite" attributeName="y1" values="90; 80; 70; 65; 70; 80; 90"/>
+                        </line>
+
+                        <line x1="111" y1="80" x2="128" y2="90" stroke="#cba" stroke-width="2">
+                            <animate dur="1s" begin="tummy{{child.child_id}}.mouseover"
+                                     end="tummy{{child.child_id}}.mouseout"
+                                     repeatCount="indefinite" attributeName="y2" values="90; 80; 70; 65; 70; 80; 90"/>
+                        </line>
+                    </svg>
+                </div>
+            </div>
+            <div class="invisible" id="editPanel" width="100%">
+                <a class="button" href="editChild.html?child_id={{chosenChild.child_id}}">View / Edit</a>
+            </div>
+        </td>
+        <td style="width:50%">
+            <div>
+                <textarea id="event_name" placeholder="Add event description" style="display:block;width:80%"></textarea>
+                <label style="vertical-align:text-top;">Select groups</label>
+                <select multiple id="ec_club_id" size=5></select>
+                <label style="vertical-align:text-top;">or select children</label>
+                <select multiple id="ec_child_id" size=5></select>
+
+                <div style="height:100px">
+                    <progress id="uploadprogress" min="0" max="100" value="0">0</progress>
+                    <input type="file" multiple="true"
+                           onchange="Utils.uploadFiles(this, Utils.id('uploadprogress'), 'timeline', Utils.id('imagePreview'))"
+                           name="attachment" id="attachment"/>
+
+                    <div id="imagePreview"></div>
+                </div>
+                <button id="addNewEventButton" class="button" ng-click="createNewEvent();">Post</button>
+            </div>
+            <div ng-repeat="event in events" id="event{{event.event_id}}">
+                <div class="post-it">
+                    <div class="header headerText">{{getTimeForEvent(event) | date:'mediumDate'}} {{event.event_name}}
+                    </div>
+                    <img ng-repeat="attachment in event.attachments" style="height:150px;" style="height:150px;"
+                         src="timeline?action=getImage&attachment_id={{attachment}}"/>
+                </div>
+                <div>&nbsp;</div>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

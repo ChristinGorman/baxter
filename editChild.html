@@ -1,0 +1,57 @@
+<!doctype html>
+<meta charset="UTF-8">
+<html>
+<head>
+    <link rel="shortcut icon" href="/images/cat.ico" type="image/x-icon"/>
+    <script src="javascript/utils.js"></script>
+    <script src="javascript/child.js"></script>
+    <script src="javascript/data.js"></script>
+    <link rel="stylesheet" type="text/css" href="baxter.css">
+    <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
+    <title>B A X T E R</title>
+</head>
+<body>
+<div class="header largeText">EDIT CHILD</div>
+<div id="menu">
+    <a class="button" href="childOverview.html">Back to overview</a>
+</div>
+
+<form action="child" method="POST">
+    <ul>
+        <li>
+            <span id="daycare"></span>
+        </li>
+        <li>
+            <input type="hidden" name="action" value="update"/>
+            <input type="hidden" name="child_id" id="child_id" value=""/>
+        </li>
+        <li>
+            <input style="width:150px" type="text" id="child_first_name" name="child_first_name"
+                   placeholder="First name"
+                   onBlur="Utils.id('child_middle_name').focus();"/>
+        </li>
+        <li>
+            <input style="width:150px" type="text" id="child_middle_name" name="child_middle_name"
+                   placeholder="Middle name"
+                   onBlur="Utils.id('child_last_name').focus();"/>
+        </li>
+        <li>
+            <input style="width:150px" type="text" id="child_last_name" name="child_last_name" placeholder="Last name"/>
+        </li>
+        <li>
+            <input style="width:150px" type="text" id="nickname" name="nickname" placeholder="Nickname"/>
+        </li>
+        <li>
+            <input style="width:150px" type="color" id="color" name="color" placeholder="Color"/>
+        </li>
+        <li>
+            <input type="submit" value="Save Changes" id="submit"/>
+        </li>
+    </ul>
+</form>
+
+<script>
+    Data.getChild(window.location.search.split("=")[1], Child.display);
+</script>
+</body>
+</html>

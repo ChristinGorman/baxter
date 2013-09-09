@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Events test</title>
+
+    <link rel="stylesheet" href="qunit.css"/>
+    <script src="qunit-1.12.0.js"></script>
+    <script src="baxter.js"></script>
+    <script src="utilsMock.js"></script>
+    <script src="data.js"></script>
+    <script>
+
+        test("new event should be sent to server", function() {
+          var myScope = {};
+          Baxter(myScope);
+
+          Utils.ec_child_id = {options:[{value:'1', selected:true}, {value:'2', selected:true}]};
+          Utils.ec_club_id = {options:[]};
+
+          Utils.event_name = {value:'test'};
+          Utils.imagePreview = {};
+          myScope.createNewEvent();
+
+          equal(Utils.servlet, 'timeline');
+          equal(Utils.data, 'action=insert&event_name=test&child_id=1,2&club_id=');
+        });
+
+        test("should add all new events", function() {
+          var myScope = {};
+          myScope.$apply = function(){};
+          Baxter(myScope);
+
+          var event1 = {event_id:1, event_name:'test'};
+          var event2 = {event_id:2, event_name:'test2'};
+
+          myScope.events.push(event1);
+
+          myScope.addEvents([event1, event2]);
+          equal(myScope.events.length, 2);
+        });
+
+    </script>
+</head>
+<body>
+<div id="qunit"></div>
+</body>
+</html>
