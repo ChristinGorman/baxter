@@ -1,7 +1,5 @@
 package no.gorman.please.common;
 
-import org.apache.commons.lang.StringUtils;
-
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.apache.commons.lang.StringUtils.trim;

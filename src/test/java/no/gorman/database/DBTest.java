@@ -69,6 +69,12 @@ public class DBTest {
     }
 
     @Test
+    public void shouldRunSQL() {
+        List<ChildTableEntry> children = db.runSQL(ChildTableEntry.class, "SELECT * FROM child", new ArrayList<>());
+        Assertions.assertThat(children).containsOnly(baxter, zoe, dollyo);
+    }
+
+    @Test
     public void should_create_simple_query() {
         List<ChildTableEntry> children = db.select(ChildTableEntry.class);
         Assertions.assertThat(children).containsOnly(baxter, zoe, dollyo);
