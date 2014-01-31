@@ -43,7 +43,9 @@ var Baxter = function Baxter($scope) {
 
 	  $scope.children.forEach(function(child) {
         var childNode = Utils.id('child' + child.child_id);
-        if (childNode) childNode.style.opacity = ScheduleFunctions.setOpacityFor(child, $scope.chosenSchedule);
+        if (childNode) {
+          childNode.style.opacity = ScheduleFunctions.setOpacityFor(child, $scope.chosenSchedule);
+        }
       });
       $scope.$apply();
       $scope.poll();
@@ -186,7 +188,6 @@ var Baxter = function Baxter($scope) {
     }
 
     $scope.addLoggedInInfo = function(registeredUser) {
-      console.log(registeredUser);
       $scope.grownup_id = registeredUser.grownup_id;
       $scope.loggedIn = registeredUser.grownup_first_name + ' ' + registeredUser.grownup_last_name;
       $scope.daycareName = registeredUser.daycare_name;

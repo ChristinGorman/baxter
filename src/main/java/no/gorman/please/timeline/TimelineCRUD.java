@@ -15,7 +15,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
@@ -69,7 +68,7 @@ public class TimelineCRUD extends WithDatabase{
             BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
             img.createGraphics().drawImage(ImageIO.read(new ByteArrayInputStream(attachment)).getScaledInstance(100, 100, Image.SCALE_SMOOTH), 0, 0, null);
             ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ImageIO.write(img, "jpg", output);
+            ImageIO.write(img, "png", output);
             return output.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -10,10 +10,14 @@ var ScheduleFunctions = function () {
   var methods = {};
 
   methods.setOpacityFor = function(child, chosenSchedule) {
-    if (!chosenSchedule || chosenSchedule === '') return 1;
+    if (!chosenSchedule || chosenSchedule === '') {
+      return 1;
+    }
 
     var schedule = methods.findSchedule(child, chosenSchedule);
-    if (!schedule) return 0;
+    if (!schedule) {
+      return 0;
+    }
 
     var howLongSinceSpotted = (new Date().getTime() - schedule.last_event) / MINUTES;
     var opacity = Math.min(1, howLongSinceSpotted / schedule.interval);
