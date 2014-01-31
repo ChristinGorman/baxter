@@ -177,12 +177,20 @@ var Baxter = function Baxter($scope) {
       return new Date(event.event_time);
     }
 
+    $scope.deleteEvent = function(event_id) {
+      Utils.sendToServer('timeline', 'action=deleteEvent&event_id=' + event_id, function() {
+        var event = $scope.findEvent(event_id);
+        $scope.events.splice($scope.events.indexOf(event), 1);
+        $scope.$apply();
+      });
+    }
+
     $scope.addLoggedInInfo = function(registeredUser) {
       console.log(registeredUser);
       $scope.grownup_id = registeredUser.grownup_id;
       $scope.loggedIn = registeredUser.grownup_first_name + ' ' + registeredUser.grownup_last_name;
       $scope.daycareName = registeredUser.daycare_name;
-      $scope.clubs = registeredUser.clubs.join();
+      $scope.clubs = registeredUser.clubs ? registeredUser.clubs.join():[];
     }
 
 	Utils.sendToServer('overview', 'action=children', $scope.addUpdates);

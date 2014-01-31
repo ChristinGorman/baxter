@@ -34,6 +34,7 @@ public class TimelineServlet extends HttpServlet {
         actionMap.put("getImage", this::getImage);
         actionMap.put("insert", this::newEvent);
         actionMap.put("getEvent", this::getEvent);
+        actionMap.put("deleteEvent", this::deleteEvent);
     }
 
     @Override
@@ -91,6 +92,12 @@ public class TimelineServlet extends HttpServlet {
 
     private Void getEvent(HttpServletRequest request, HttpServletResponse response) {
         print(response, new Gson().toJson(actions.getEvent(request.getParameter(event_id.name()))));
+        return null;
+    }
+
+    public Void deleteEvent(HttpServletRequest request, HttpServletResponse response) {
+        actions.deleteEvent(request.getParameter(event_id.name()));
+        print(response, "{}");
         return null;
     }
 

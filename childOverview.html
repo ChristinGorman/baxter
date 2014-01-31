@@ -98,6 +98,7 @@
             <div ng-repeat="event in events" id="event{{event.event_id}}">
                 <div class="post-it">
                     <div class="header headerText">{{getTimeForEvent(event) | date:'mediumDate'}} {{event.event_name}}
+                        <button ng-click="deleteEvent(event.event_id)">Delete</button>
                     </div>
                     <img ng-repeat="attachment in event.attachments" style="height:150px;" style="height:150px;"
                          src="timeline?action=getImage&attachment_id={{attachment}}"/>

@@ -180,12 +180,16 @@ public class DBFunctions {
     }
 
     public static <T> Table getMainTable(T newOne) {
-        List<Table> pks = getMappedFields(newOne.getClass()).stream()
+        return getMainTableForClass(newOne.getClass());
+    }
+
+    public static <T> Table getMainTableForClass(Class<T> clazz) {
+        List<Table> pks = getMappedFields(clazz).stream()
                 .filter(f -> getColumn(f).getType() == PrimaryKey)
                 .map(f-> getColumn(f).getTable())
                 .collect(toList());
         if (pks.size() > 1) {
-            throw new IllegalArgumentException("Multiple primary keys are referenced in class " + newOne.getClass() + ", must specify which table to do the insert on");
+            throw new IllegalArgumentException("Multiple primary keys are referenced in class " + clazz + ", must specify which table to do the insert on");
         }
         return pks.get(0);
     }
@@ -194,6 +198,9 @@ public class DBFunctions {
     public static <T> Field getPrimaryKeyField(T obj) {
         return getMappedFields(obj.getClass()).stream().filter(f-> getColumn(f).getType() == PrimaryKey).findFirst().orElseThrow(() -> new IllegalArgumentException(obj.getClass().getName() + " has no primary key defined"));
     }
+
+
+
 
     public static <A, B> Optional<Table> findManyToManyTable(A from, B to) {
         Collection<Join> joins = findJoins(asList(getMainTable(from), getMainTable(to)));

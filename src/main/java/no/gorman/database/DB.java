@@ -1,5 +1,6 @@
 package no.gorman.database;
 
+import no.gorman.please.common.Child;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -208,6 +209,22 @@ public class DB {
             }
             onSuccessActions.add(() -> BigBrother.informAllAgents(newInstance));
             return newId;
+        } catch (Exception e) {
+            log.error(sql);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <T> void delete(Class<T> clazz, Where... where) {
+        Table table = getMainTableForClass(clazz);
+        Collection<T> deleted = select(clazz, where);
+        Optional<DatabaseColumns> pk = DatabaseColumns.getPrimaryKey(table);
+        String sql = "DELETE FROM " + table.name() + " " + makeWhere(new ArrayList<Join>(), where);
+        log.info(sql);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            addParameters(stmt, createParameterList(where));
+            stmt.execute();
+            onSuccessActions.add(() -> BigBrother.informAllAgents(deleted.toArray()));
         } catch (Exception e) {
             log.error(sql);
             throw new RuntimeException(e);

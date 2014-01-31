@@ -1,18 +1,13 @@
 package no.gorman.please.timeline;
 
-import no.gorman.database.DB;
-import no.gorman.database.DBFunctions;
+import no.gorman.database.*;
+import no.gorman.please.common.AttachmentPK;
 import no.gorman.please.utils.WithDatabase;
-import no.gorman.database.OrderBy;
-import no.gorman.database.Where;
 import no.gorman.please.common.ChildPK;
 import no.gorman.please.common.ClubPK;
 import org.apache.commons.fileupload.FileItem;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.lang.Long.parseLong;
@@ -84,7 +79,18 @@ public class TimelineCRUD extends WithDatabase{
     }
 
     public Event getEvent(String eventId) {
-        return populate(getDB().selectOnlyOne(Event.class, new Where(event_id, " = ", Long.parseLong(eventId)))
-                .orElseThrow(() -> new IllegalStateException("No event found with id " + eventId)));
+        Optional<Event> event = getDB().selectOnlyOne(Event.class, new Where(event_id, " = ", Long.parseLong(eventId)));
+        return event.isPresent() ? populate(event.get()) : null;
+    }
+
+    public void deleteEvent(String eventId) {
+        long id = Long.parseLong(eventId);
+        EventPK eventPk = new EventPK(id);
+
+        getDB().delete(AttachmentPK.class, new Where(attachment_event_id, " = ", id));
+
+        getDB().select(ChildPK.class, new Where(ec_event_id, " = ", id)).forEach(c -> getDB().unlink(c, eventPk));
+        getDB().select(ClubPK.class, new Where(ecl_event_id, " = ", id)).forEach(c -> getDB().unlink(c, eventPk));
+        getDB().delete(EventPK.class, new Where(event_id, " = ", id));
     }
 }

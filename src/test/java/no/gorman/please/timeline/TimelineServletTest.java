@@ -9,6 +9,7 @@ import no.gorman.please.common.Child;
 import no.gorman.please.common.DayCareCenter;
 import no.gorman.please.common.GrownUp;
 import org.fest.assertions.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -113,6 +115,28 @@ public class TimelineServletTest {
 
         e.addChildren(db.select(ChildName.class, new Where(ec_event_id, "=", e.getEventId())));
         Assertions.assertThat(responseWritten.get()).isEqualTo(new Gson().toJson(asList(e)));
+    }
+
+    @Test
+    public void shouldDeleteEventWithAllLinks() throws  Exception {
+        Event e = new Event();
+        e.setEventName("test");
+        e.setEventTime(System.currentTimeMillis());
+        db.insert(e);
+        db.insert(new Attachment(e.getEventId(), "", new byte[0]));
+
+        asList(one, two, three).forEach(child -> db.link(child, e));
+
+        TimelineCRUD actions = new TimelineCRUD(db);
+        TimelineServlet servlet = new TimelineServlet(actions);
+        when(request.getParameter(eq("action"))).thenReturn("deleteEvent");
+        when(request.getParameter(eq("event_id"))).thenReturn(String.valueOf(e.getEventId()));
+        when(response.getWriter()).thenReturn(mock(PrintWriter.class));
+
+        servlet.doPost(request, response);
+        Assert.assertFalse(db.selectOnlyOne(Event.class, new Where(event_id, " = ", e.getEventId())).isPresent());
+        Assertions.assertThat(db.runSQL(EventPK.class, "SELECT * FROM event_child", new ArrayList())).isEmpty();
+
     }
 
 }

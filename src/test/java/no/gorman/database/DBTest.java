@@ -66,6 +66,7 @@ public class DBTest {
         you.setEmail("you@somewhere.com");
         you.setDayCareId(blåbærtoppen.getDayCareCenterId());
         db.insert(you);
+        db.onSuccessActions.clear();
     }
 
     @Test
@@ -200,6 +201,13 @@ public class DBTest {
                 new Join(event_id, ec_event_id),
                 new Join(child_id, ec_child_id),
                 new Join(event_id, attachment_event_id));
+    }
+
+    @Test
+    public void should_delete() {
+        Where where = new Where(child_id, " = ", baxter.childId);
+        db.delete(Child.class, where);
+        Assert.assertFalse(db.selectOnlyOne(Child.class, where).isPresent());
     }
 
     private Event newEvent(String name) {
