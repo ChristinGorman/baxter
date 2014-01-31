@@ -12,6 +12,9 @@ public class Attachment {
     @Column(column=DatabaseColumns.attachment)
     private byte[] attachment;
 
+    @Column(column=DatabaseColumns.thumbnail)
+    private byte[] thumbnail;
+
     @Column(column=DatabaseColumns.attachment_event_id)
     private long attachment_event_id;
 
@@ -25,6 +28,14 @@ public class Attachment {
 
     public byte[] getAttachment() {
         return attachment;
+    }
+
+    public void setThumbnail(byte[] thumb) {
+        this.thumbnail = thumb;
+    }
+
+    public byte[] getThumbnail() {
+        return thumbnail;
     }
 
     public String getContentType() {

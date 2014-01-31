@@ -1,13 +1,23 @@
 package no.gorman.please.timeline;
 
-import no.gorman.database.*;
+import no.gorman.database.DB;
+import no.gorman.database.DatabaseColumns;
+import no.gorman.database.OrderBy;
+import no.gorman.database.Where;
 import no.gorman.please.common.AttachmentPK;
-import no.gorman.please.utils.WithDatabase;
 import no.gorman.please.common.ChildPK;
 import no.gorman.please.common.ClubPK;
+import no.gorman.please.utils.WithDatabase;
 import org.apache.commons.fileupload.FileItem;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static java.lang.Long.parseLong;
@@ -34,7 +44,9 @@ public class TimelineCRUD extends WithDatabase{
         getDB().insert(event);
         attachments.forEach(file -> {
             if (isNotBlank(file.getName())) { //why is this needed?
-                getDB().insert(new Attachment(event.getEventId(), file.getContentType(), file.get()));
+                Attachment attachment = new Attachment(event.getEventId(), file.getContentType(), file.get());
+                attachment.setThumbnail(makeThumb(attachment.getAttachment()));
+                getDB().insert(attachment);
             }
         });
 
@@ -50,6 +62,18 @@ public class TimelineCRUD extends WithDatabase{
             children.addAll(getDB().select(ChildPK.class, new Where(grc_club_id, " IN (" + join(clubIds, ",") + ")")));
         }
         children.forEach(childPK -> getDB().link(childPK, event));
+    }
+
+    private byte[] makeThumb(byte[] attachment) {
+        try {
+            BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+            img.createGraphics().drawImage(ImageIO.read(new ByteArrayInputStream(attachment)).getScaledInstance(100, 100, Image.SCALE_SMOOTH), 0, 0, null);
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ImageIO.write(img, "jpg", output);
+            return output.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     boolean containsNumericData(String[] ids) {
@@ -71,11 +95,17 @@ public class TimelineCRUD extends WithDatabase{
                 .stream().map(this::populate).collect(toList());
     }
 
-    public Attachment getAttachment(String idString, Long id) {
+    public Attachment getAttachment(Long id) {
         return getDB().selectOnlyOne(
                 Attachment.class,
                 new Where(attachment_id, "=", id))
-                .orElseThrow(() -> new IllegalArgumentException("No attachment found with id " + idString));
+                .orElseThrow(() -> new IllegalArgumentException("No attachment found with id " + id));
+    }
+
+    public byte[] getThumbnail(Long id) {
+        return getDB().select(
+                DatabaseColumns.thumbnail, byte[].class,
+                new Where(attachment_id, "=", id)).get(0);
     }
 
     public Long getEventCreator(String eventId) {

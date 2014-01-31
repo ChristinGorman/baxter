@@ -33,6 +33,7 @@ public class TimelineServlet extends HttpServlet {
         this.actions = actions;
         actionMap.put("getEvents", this::getTimeline);
         actionMap.put("getImage", this::getImage);
+        actionMap.put("getThumbnail", this::getThumbnail);
         actionMap.put("insert", this::newEvent);
         actionMap.put("getEvent", this::getEvent);
         actionMap.put("deleteEvent", this::deleteEvent);
@@ -69,15 +70,33 @@ public class TimelineServlet extends HttpServlet {
         return null;
     }
 
+
+    private Void getThumbnail(HttpServletRequest request, HttpServletResponse response)  {
+        try {
+            String idString = request.getParameter(attachment_id.name());
+            //for some reason angular keeps requesting an image with id "{{attachment}}"
+            // instead of actually replacing the brackets with a sensible value...
+            if (StringUtils.isBlank(idString) || !StringUtils.isNumeric(idString)) return null;
+
+            Long id = Long.parseLong(idString);
+            byte[] file = actions.getThumbnail(id);
+            response.setContentType("image/png");
+            response.getOutputStream().write(file);
+            return null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Void getImage(HttpServletRequest request, HttpServletResponse response)  {
         try {
             String idString = request.getParameter(attachment_id.name());
             //for some reason angular keeps requesting an image with id "{{attachment}}"
             // instead of actually replacing the brackets with a sensible value...
-            if (!StringUtils.isNumeric(idString)) return null;
+            if (StringUtils.isBlank(idString) || !StringUtils.isNumeric(idString)) return null;
 
             Long id = Long.parseLong(idString);
-            Attachment attachment = actions.getAttachment(idString, id);
+            Attachment attachment = actions.getAttachment(id);
             byte[] file = attachment.getAttachment();
             response.setContentType(attachment.getContentType());
             response.getOutputStream().write(file);

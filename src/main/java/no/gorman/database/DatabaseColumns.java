@@ -51,6 +51,7 @@ public enum DatabaseColumns {
 
     attachment_id(Long.TYPE, Table.attachment, PrimaryKey),
     attachment(byte[].class, Table.attachment),
+    thumbnail(byte[].class, Table.attachment),
     attachment_event_id(Long.TYPE, Table.attachment, ForeignKey, Table.event),
     content_type(String.class, Table.attachment, 50),
 
