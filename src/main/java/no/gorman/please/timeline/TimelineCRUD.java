@@ -78,6 +78,11 @@ public class TimelineCRUD extends WithDatabase{
                 .orElseThrow(() -> new IllegalArgumentException("No attachment found with id " + idString));
     }
 
+    public Long getEventCreator(String eventId) {
+        List<Long> creators = getDB().select(event_creator, Long.TYPE, new Where(event_id, " = ", Long.parseLong(eventId)));
+        return creators.isEmpty()?null:creators.get(0);
+    }
+
     public Event getEvent(String eventId) {
         Optional<Event> event = getDB().selectOnlyOne(Event.class, new Where(event_id, " = ", Long.parseLong(eventId)));
         return event.isPresent() ? populate(event.get()) : null;

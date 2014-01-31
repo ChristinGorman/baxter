@@ -96,6 +96,7 @@ public class TimelineServletTest {
         Event e = new Event();
         e.setEventName("test");
         e.setEventTime(System.currentTimeMillis());
+        e.setEventCreator(grownup.getGrownUpId());
 
         db.insert(e);
         asList(one, two, three).forEach(child -> db.link(child, e));
@@ -122,6 +123,7 @@ public class TimelineServletTest {
         Event e = new Event();
         e.setEventName("test");
         e.setEventTime(System.currentTimeMillis());
+        e.setEventCreator(grownup.getGrownUpId());
         db.insert(e);
         db.insert(new Attachment(e.getEventId(), "", new byte[0]));
 
@@ -139,4 +141,25 @@ public class TimelineServletTest {
 
     }
 
+
+    @Test(expected = SecurityException.class)
+    public void can_only_delete_own_events() throws Exception {
+        GrownUp someoneElse = new GrownUp();
+        db.insert(someoneElse);
+
+        Event e = new Event();
+        e.setEventName("test");
+        e.setEventTime(System.currentTimeMillis());
+        e.setEventCreator(someoneElse.getGrownUpId());
+        db.insert(e);
+
+
+        TimelineCRUD actions = new TimelineCRUD(db);
+        TimelineServlet servlet = new TimelineServlet(actions);
+        when(request.getParameter(eq("action"))).thenReturn("deleteEvent");
+        when(request.getParameter(eq("event_id"))).thenReturn(String.valueOf(e.getEventId()));
+        when(response.getWriter()).thenReturn(mock(PrintWriter.class));
+
+        servlet.doPost(request, response);
+    }
 }

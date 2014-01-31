@@ -18,6 +18,9 @@ public class Event {
     @Column(column=DatabaseColumns.event_time)
     private Long event_time;
 
+    @Column(column=DatabaseColumns.event_creator)
+    private Long event_creator;
+
     private final List<Long> attachments = new ArrayList<>();
     private final List<ChildName> children = new ArrayList<>();
 
@@ -43,6 +46,14 @@ public class Event {
 
     public void addAttachments(Collection<Long> attachmentIds) {
         this.attachments.addAll(attachmentIds);
+    }
+
+    public void setEventCreator(long eventCreator) {
+        this.event_creator = eventCreator;
+    }
+
+    public Long getEventCreator() {
+        return event_creator;
     }
 
     public static Event withNameAndTime(String eventName, long timestamp) {

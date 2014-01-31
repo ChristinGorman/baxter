@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
@@ -60,6 +61,7 @@ public class TimelineServlet extends HttpServlet {
     private Void newEvent(HttpServletRequest request, HttpServletResponse response) {
         String eventName = request.getParameter(event_name.name());
         Event newEvent = withNameAndTime(eventName, System.currentTimeMillis());
+        newEvent.setEventCreator(currentUser(request).getGrownUpId());
         String[] children = request.getParameter(child_id.name()).split(",");
         String[] clubs = request.getParameter(club_id.name()).split(",");
         actions.insert(newEvent, children, clubs, currentUser(request).getAndRemoveUploadedFiles());
@@ -96,7 +98,12 @@ public class TimelineServlet extends HttpServlet {
     }
 
     public Void deleteEvent(HttpServletRequest request, HttpServletResponse response) {
-        actions.deleteEvent(request.getParameter(event_id.name()));
+        String eventId = request.getParameter(event_id.name());
+        RegisteredUser user = currentUser(request);
+        if (!Objects.equals(actions.getEventCreator(eventId), user.getGrownUpId())){
+            throw new SecurityException(user.getGrownup().getFullName() + " does not have permission to delete event " + eventId);
+        }
+        actions.deleteEvent(eventId);
         print(response, "{}");
         return null;
     }

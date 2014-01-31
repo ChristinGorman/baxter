@@ -44,6 +44,7 @@ public enum DatabaseColumns {
     event_id(Long.TYPE, Table.event, PrimaryKey),
     event_name(String.class, Table.event, 500),
     event_time(Long.TYPE, Table.event),
+    event_creator(Long.TYPE, Table.event, ForeignKey, Table.grownup),
 
     ec_child_id(Long.TYPE, Table.event_child, ForeignKey, child),
     ec_event_id(Long.TYPE, Table.event_child, ForeignKey, Table.event),
