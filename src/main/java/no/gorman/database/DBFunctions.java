@@ -110,9 +110,9 @@ public class DBFunctions {
         Set<Table> tables = getMappedFields(clazz).stream().map(field -> getColumn(field).getTable()).collect(toSet());
 
         if (searchParams != null) {
-            tables.addAll(asList(searchParams).stream()
-                    .map(param -> param.column.getTable())
-                    .<List<Table>>collect(toList()));
+            Stream<Table> tableStream = asList(searchParams).stream()
+                    .map(param -> param.column.getTable());
+            tables.addAll((Collection<Table>)tableStream.collect(toList()));
         }
         return tables;
     }
@@ -135,8 +135,9 @@ public class DBFunctions {
         for (Table a : tables) {
             for (Table b: tables) {
                 if ( a == b || !alreadyTried.add(new Pair<>(a, b))) continue;
-                joins.addAll(new DijkstraShortestPath<>(tableGraph, a, b).getPathEdgeList()
-                        .stream().map(joinEdge -> joinEdge.join).<List<Join>>collect(toList()));
+                Stream<Join> jonStream = new DijkstraShortestPath<>(tableGraph, a, b).getPathEdgeList()
+                        .stream().map(joinEdge -> joinEdge.join);
+                joins.addAll((Collection<Join>)jonStream.collect(toList()));
             }
         }
         return joins;

@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static java.lang.Long.parseLong;
 import static java.util.Arrays.asList;
@@ -44,7 +45,8 @@ public class TimelineCRUD extends WithDatabase{
 
         Set<ChildPK> children = new HashSet<>();
         if (childrenSpecified) {
-            children.addAll(asList(childIds).stream().map(id -> new ChildPK(parseLong(id))).<List<ChildPK>>collect(toList()));
+            Stream<ChildPK> pkStream = asList(childIds).stream().map(id -> new ChildPK(parseLong(id)));
+            children.addAll((Collection<ChildPK>)pkStream.collect(toList()));
         }
 
         if (clubsSpecified) {

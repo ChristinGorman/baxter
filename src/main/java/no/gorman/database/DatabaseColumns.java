@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -141,12 +142,13 @@ public enum DatabaseColumns {
     }
 
     public static Collection<DatabaseColumns> incomingReferenceColumns(Table t) {
-        return asList(DatabaseColumns.values()).stream()
-                .filter(col -> col.getType() == ForeignKey && col.getJoinedTo() == t)
-                .<List<DatabaseColumns>>collect(toList());
+        Stream<DatabaseColumns> colStream = asList(DatabaseColumns.values()).stream()
+                .filter(col -> col.getType() == ForeignKey && col.getJoinedTo() == t);
+        return (Collection<DatabaseColumns>)colStream.collect(toList());
     }
 
     public static Collection<DatabaseColumns> getColumnsFor(Table t) {
-        return asList(DatabaseColumns.values()).stream().filter(c -> c.getTable() == t).<List<DatabaseColumns>>collect(toList());
+        Stream<DatabaseColumns> dbStream = asList(DatabaseColumns.values()).stream().filter(c -> c.getTable() == t);
+        return (Collection<DatabaseColumns>)dbStream.collect(toList());
     }
 }
