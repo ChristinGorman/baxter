@@ -196,6 +196,18 @@ var Baxter = function Baxter($scope) {
       $scope.clubs = registeredUser.clubs ? registeredUser.clubs.join():[];
     }
 
+    $scope.eventsForFilteredChildren = function(event) {
+        if (!event.children || !$scope.search)return true;
+        var searchString = $scope.search.toLowerCase();
+        for (var i= 0; i < event.children.length; i++) {
+           if (event.children[i].nickname.toLowerCase().indexOf(searchString) >= 0) {
+             return event;
+           }
+        };
+        return null;
+    }
+
+
 	Utils.sendToServer('overview', 'action=children', $scope.addUpdates);
 	Utils.sendToServer('overview', 'action=clubs', $scope.addClubs);
 	Utils.sendToServer('overview', 'action=scheduleNames', $scope.addScheduleNames);
