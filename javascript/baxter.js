@@ -44,7 +44,7 @@ var Baxter = function Baxter($scope) {
 	  $scope.children.forEach(function(child) {
         var childNode = Utils.id('child' + child.child_id);
         if (childNode) {
-          childNode.style.opacity = ScheduleFunctions.setOpacityFor(child, $scope.chosenSchedule);
+          childNode.style.opacity = ScheduleFunctions.getOpacityFor(child, $scope.chosenSchedule);
         }
       });
       $scope.$apply();
@@ -92,7 +92,7 @@ var Baxter = function Baxter($scope) {
 	$scope.hideChildren = function() {
 	  $scope.children.forEach(function(child) {
 	    var childDiv = Utils.id('child' + child.child_id);
-	    childDiv.style.opacity = ScheduleFunctions.setOpacityFor(child, $scope.chosenSchedule);
+	    childDiv.style.opacity = ScheduleFunctions.getOpacityFor(child, $scope.chosenSchedule);
 	  });
 	  setTimeout($scope.hideChildren, 500);
 	}
@@ -121,7 +121,9 @@ var Baxter = function Baxter($scope) {
 	$scope.chooseSchedule = function(scheduleName){
 	   $scope.chosenSchedule = scheduleName;
 	   $scope.children.forEach(function(child) {
-	     Utils.id('child' + child.child_id).style.opacity = ScheduleFunctions.setOpacityFor(child, scheduleName);
+	     var childElement = Utils.id('child' + child.child_id);
+	     var newOpacity = ScheduleFunctions.getOpacityFor(child, scheduleName);
+	     childElement.style.opacity = newOpacity;
 	   });
 	}
 

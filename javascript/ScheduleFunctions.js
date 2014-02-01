@@ -9,25 +9,22 @@ var MINUTES = 60000;
 var ScheduleFunctions = function () {
   var methods = {};
 
-  methods.setOpacityFor = function(child, chosenSchedule) {
-    if (!chosenSchedule || chosenSchedule === '') {
-      return 1;
-    }
+  methods.getOpacityFor = function(child, chosenSchedule) {
+    if (!chosenSchedule || chosenSchedule === '') {return 1;}
 
     var schedule = methods.findSchedule(child, chosenSchedule);
-    if (!schedule) {
-      return 0;
-    }
+    if (!schedule) {return 0;}
 
-    var howLongSinceSpotted = (new Date().getTime() - schedule.last_event) / MINUTES;
-    var opacity = Math.min(1, howLongSinceSpotted / schedule.interval);
+    if (!schedule.last_event) schedule.last_event = Date.now() - (schedule.interval * MINUTES);
+    var howLongSinceSpotted = (Date.now() - schedule.last_event) / MINUTES;
+    var opacity = Math.min(1, howLongSinceSpotted / 1,schedule.interval);
     return opacity;
   }
 
   methods.findSchedule = function(child, chosenSchedule) {
     if (!child.schedules) return null;
     for (var i = 0; i < child.schedules.length; i++) {
-      if (child.schedules[i].schedule_name == chosenSchedule) {
+      if (child.schedules[i].schedule_name === chosenSchedule) {
         return child.schedules[i];
       }
     }

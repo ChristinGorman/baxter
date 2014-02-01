@@ -80,8 +80,10 @@ public class TimelineServlet extends HttpServlet {
 
             Long id = Long.parseLong(idString);
             byte[] file = actions.getThumbnail(id);
-            response.setContentType("image/png");
-            response.getOutputStream().write(file);
+            if (file != null) {
+                response.setContentType("image/png");
+                response.getOutputStream().write(file);
+            }
             return null;
         } catch (IOException e) {
             throw new RuntimeException(e);
